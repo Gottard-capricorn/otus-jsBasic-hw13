@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 0",
     "prepare": "husky",
     "format:check": "prettier --check .",
-    "format:fix": "prettier --write"
+    "format:fix": "prettier --write",
+    "build": "mkdir dist && cp index.html dist && cp -r src dist"
   },
   "lint-staged": {
       "*.{css,js,html,yml,md}": "npm run format:fix"
