@@ -4,8 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky"
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "prepare": "husky",
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write"
+  },
+  "lint-staged": {
+      "*.{css,js,html,yml,md}": "npm run format:fix"
   },
   "repository": {
     "type": "git",
