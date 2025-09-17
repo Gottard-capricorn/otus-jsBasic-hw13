@@ -8,6 +8,8 @@
     "prepare": "husky",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "build": "mkdir dist && cp index.html dist && cp -r src dist"
   },
   "lint-staged": {
