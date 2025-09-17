@@ -1,1 +1,3 @@
-document.querySelector('h1').innerText = 'JS is cool'
+import "./style.css";
+
+document.querySelector("h1").innerText = "JS is cool";
