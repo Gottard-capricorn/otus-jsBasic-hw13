@@ -10,6 +10,7 @@
     "format:fix": "prettier --write",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
+    "start": "webpack serve --open",
     "build": "webpack --config webpack.config.js",
     "build:project": "mkdir dist && cp index.html dist && cp -r src dist"
   },
@@ -47,7 +48,8 @@
     "prettier": "^3.6.2",
     "style-loader": "^4.0.0",
     "webpack": "^5.101.3",
-    "webpack-cli": "^6.0.1"
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
   },
   "dependencies": {
     "html-webpack-plugin": "^5.6.4"
