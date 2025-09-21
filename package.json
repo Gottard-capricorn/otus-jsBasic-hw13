@@ -11,8 +11,7 @@
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "start": "webpack serve --open",
-    "build": "webpack --config webpack.config.js",
-    "build:project": "mkdir dist && cp index.html dist && cp -r src dist"
+    "build": "webpack --config webpack.config.js"
   },
   "lint-staged": {
     "*.{css,js,html,yml,md}": "npm run format:fix"
