@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 export default {
   mode: "development",
 
-  entry: "./src/script.js",
+  entry: "./src/createPage.js",
 
   output: {
     path: path.resolve(__dirname, "dist"),
