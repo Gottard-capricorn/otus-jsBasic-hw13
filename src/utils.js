@@ -1,16 +1,17 @@
-//Получаем информацию о текущем местоположении
-async function getGeo() {
-  return (await fetch("https://get.geojs.io/v1/ip/geo.json")).json();
-}
-
-//Получаем данные о городе
-async function getFetchInformation(cityName) {
-  const apiKey = "63b151efb40928e868a13e6198b120c9";
-  const url = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${cityName}&appid=${apiKey}`;
-  return (await fetch(url)).json();
-}
-
-//Можно ли как нибудь объединить две вышеперечисленные функции?
+//Объект с методами для fetch
+export const getInformation = {
+  //Получаем информацию о текущем местоположении
+  getGeo: async () => {
+    const url = "https://get.geojs.io/v1/ip/geo.json";
+    return (await fetch(url)).json();
+  },
+  //Получаем данные о городе
+  getFetchInformation: async (cityName) => {
+    const apiKey = "63b151efb40928e868a13e6198b120c9";
+    const url = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${cityName}&appid=${apiKey}`;
+    return (await fetch(url)).json();
+  },
+};
 
 //Проверяет, что ul пуст. Иначе обнуляет
 function checkUl() {
@@ -18,15 +19,13 @@ function checkUl() {
     document.querySelector("ul") &&
     document.querySelector("ul").textContent !== ""
   ) {
-    //textContent?
-    document.querySelector("ul").textContent = ""; //textContent?
+    document.querySelector("ul").textContent = "";
   }
 }
 
 //Проверяем пусто ли поле ввода
 function emptyInput() {
   if (document.querySelector("input").value === "") {
-    //value?
     return true;
   } else {
     return false;
@@ -35,18 +34,54 @@ function emptyInput() {
 
 //Очищаем поле input
 function clearInput() {
-  document.querySelector("input").value = ""; //value?
+  document.querySelector("input").value = "";
 }
 
-//Добавляем спарсенные результаты в список
-function createLi(fetchResult) {
+//Отдельная функция для случая с массивом
+function createSubListForArray(el, fetchResult) {
+  const liEl = document.createElement("li");
+  liEl.textContent = `${el}:`;
+  console.log(liEl);
+  const ulEl = document.createElement("ul");
+  for (let i in fetchResult[el][0]) {
+    const secLiEl = document.createElement("li");
+    secLiEl.textContent = `${i}: ${fetchResult[el][0][i]}`;
+    ulEl.append(secLiEl);
+  }
+  liEl.append(ulEl);
+  document.querySelector("ul").append(liEl);
+}
+
+function createSubListForObject(el, fetchResult) {
+  const liEl = document.createElement("li");
+  liEl.textContent = `${el}:`;
+  const ulEl = document.createElement("ul");
+  for (let i in fetchResult[el]) {
+    const secLiEl = document.createElement("li");
+    secLiEl.textContent = `${i}: ${fetchResult[el][i]}`;
+    ulEl.append(secLiEl);
+  }
+  liEl.append(ulEl);
+  document.querySelector("ul").append(liEl);
+}
+
+//Добавляем спарсенные результаты в unordered list
+function createUnorderedList(fetchResult) {
+  console.log(typeof fetchResult);
+  console.log(Object.keys(fetchResult).length);
   for (let el in fetchResult) {
-    console.log(el, fetchResult[el]); //el в нектороых слычаях тоже является объектом и нужно проходить по его вложенности
-    //кроме weather - это массив. Его нужно обработать как массив.
-    //В следующих уроках объясняется как работать с подобными случаями. Добавить это в список вопросов на консультацию?
-    const liEl = document.createElement("li");
-    liEl.textContent = `${el}: ${fetchResult[el]}`;
-    document.querySelector("ul").append(liEl);
+    switch (true) {
+      case Array.isArray(fetchResult[el]):
+        createSubListForArray(el, fetchResult);
+        break;
+      case fetchResult[el] !== null && typeof fetchResult[el] === "object":
+        createSubListForObject(el, fetchResult);
+        break;
+      default:
+        const liEl = document.createElement("li");
+        liEl.textContent = `${el}: ${fetchResult[el]}`;
+        document.querySelector("ul").append(liEl);
+    }
   }
 }
 
@@ -54,21 +89,18 @@ function createLi(fetchResult) {
 export async function buttonBehavior() {
   checkUl();
 
-  if (emptyInput()) {
-    createLi(await getGeo());
-  } else {
-    const inputValue = document.querySelector("input").value;
-    clearInput();
-    createLi(await getFetchInformation(inputValue));
-
-    // console.log(`value: ${document.querySelector("ul").value}`);
-    // console.log(`textContent: ${document.querySelector("ul").textContent}`);
-    // console.log(`innerText: ${document.querySelector("ul").innerText}`);
-    // console.log(`innerHTML: ${document.querySelector("ul").innerHTML}`);
+  switch (true) {
+    case emptyInput():
+      createUnorderedList(await getInformation.getGeo());
+      break;
+    default:
+      const inputValue = document.querySelector("input").value;
+      clearInput();
+      createUnorderedList(await getInformation.getFetchInformation(inputValue));
   }
 }
 
-//Объект с методами создания аргументов
+//Объект с методами создания элементов
 export const createElements = {
   createH3: function () {
     document.body.append(document.createElement("h3"));
@@ -83,6 +115,3 @@ export const createElements = {
     document.body.append(document.createElement("ul"));
   },
 };
-
-// Понять логику работы скрипта с codeSandbox. Добавить в repomix, а потом в нейронку на обработку
-//Именно здесь можно разобраться в textValue, innerHTML, value ....
