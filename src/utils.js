@@ -2,6 +2,7 @@
 export const getInformation = {
   //Получаем информацию о текущем местоположении
   getGeo: async () => {
+    console.log("we are in getGeo");
     const url = "https://get.geojs.io/v1/ip/geo.json";
     return (await fetch(url)).json();
   },
@@ -67,8 +68,8 @@ function createSubListForObject(el, fetchResult) {
 
 //Добавляем спарсенные результаты в unordered list
 function createUnorderedList(fetchResult) {
-  console.log(typeof fetchResult);
-  console.log(Object.keys(fetchResult).length);
+  checkUl();
+  console.log("we in createUnordered list");
   for (let el in fetchResult) {
     switch (true) {
       case Array.isArray(fetchResult[el]):
@@ -78,6 +79,7 @@ function createUnorderedList(fetchResult) {
         createSubListForObject(el, fetchResult);
         break;
       default:
+        console.log("we are in default");
         const liEl = document.createElement("li");
         liEl.textContent = `${el}: ${fetchResult[el]}`;
         document.querySelector("ul").append(liEl);
@@ -87,10 +89,11 @@ function createUnorderedList(fetchResult) {
 
 //Добавляем поведение кнопки
 export async function buttonBehavior() {
-  checkUl();
+  console.log("we are in buttonBehavior");
 
   switch (true) {
     case emptyInput():
+      console.log("we are emptyInput");
       createUnorderedList(await getInformation.getGeo());
       break;
     default:
@@ -115,3 +118,58 @@ export const createElements = {
     document.body.append(document.createElement("ul"));
   },
 };
+
+//   src/utils.js
+
+//   debug: add console.log
+//   statements for debugging
+
+//   - Add debug console.log
+//   statements in getGeo(),
+//   buttonBehavior() and
+//   createUnorderedList()
+//   - Add debugging in switch
+//   case default branch
+//   - Help track execution
+//   flow during
+//   development/testing
+
+// config: improve ESLint
+//   rules and build
+//   dependencies
+
+//   - Add no-console rule with
+//    exceptions for warn/error
+//    in ESLint config
+//   - Move html-webpack-plugin
+//    to devDependencies
+//   - Add
+//   terser-webpack-plugin for
+//   potential console removal
+
+// 2. ```
+// test: implement
+// comprehensive test suite
+// with mocking
+
+// - Add fetch mocking using
+// jest.fn for API testing
+// - Create full test setup
+// with DOM elements and
+// event listeners
+// - Add test for multiple
+// button clicks with proper
+// assertions
+// - Expand test structure
+// for better coverage
+
+// debug: add console.log
+// statements for development
+
+// - Add debug logging in
+// getGeo(), buttonBehavior()
+//  and createUnorderedList()
+// - Help track execution
+// flow during testing phase
+// - Temporary debugging
+// statements for development
