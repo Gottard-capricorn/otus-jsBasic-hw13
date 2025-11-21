@@ -20,6 +20,10 @@ export default {
   // Indicates whether the coverage information should be collected while executing the test
   collectCoverage: true,
 
+  moduleNameMapper: {
+    "\\.(css|less|scss)$": "<rootDir>/__mocks__/styleMock.js",
+  },
+
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   // collectCoverageFrom: undefined,
 
@@ -43,7 +47,14 @@ export default {
   // ],
 
   // An object that configures minimum threshold enforcement for coverage results
-  // coverageThreshold: undefined,
+  coverageThreshold: {
+    global: {
+      branches: 50,
+      functions: 50,
+      lines: 50,
+      statements: 50,
+    },
+  },
 
   // A path to a custom dependency extractor
   // dependencyExtractor: undefined,

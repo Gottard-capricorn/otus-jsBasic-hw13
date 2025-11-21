@@ -4,6 +4,7 @@ import json from "@eslint/json";
 import markdown from "@eslint/markdown";
 import css from "@eslint/css";
 import { defineConfig } from "eslint/config";
+import jest from "eslint-plugin-jest";
 
 export default defineConfig([
   {
@@ -11,6 +12,9 @@ export default defineConfig([
     plugins: { js },
     extends: ["js/recommended"],
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
+    rules: {
+      "no-console": ["error", { allow: ["warn", "error"] }],
+    },
   },
   {
     files: ["**/*.json"],
@@ -41,5 +45,9 @@ export default defineConfig([
     plugins: { css },
     language: "css/css",
     extends: ["css/recommended"],
+  },
+  {
+    files: ["src/**/*.test.js"],
+    ...jest.configs["flat/recommended"],
   },
 ]);
