@@ -1,24 +1,52 @@
-//Видимо нужно дореализовать логику, чтобы получали данные пользователя и возвращалась погода в его городе - может отдельную кнопку
-//Отдельно кнопку - введите данные, если данные не введены
-
 import "./style.css";
-import { buttonBehavior, createElements } from "./utils.js";
+import {
+  AppendElementToDom,
+  setH3Text,
+  setButtonText,
+  getButton,
+  checkUl,
+  getUl,
+  clearInput,
+  formatFetchResult,
+  getInputValue,
+} from "./view.js";
+import { GetGeoData } from "./model.js";
 
-button.addEventListener("click", buttonBehavior);
+const appendElement = new AppendElementToDom();
+appendElement.appendH3();
+appendElement.appendInput();
+appendElement.appendButton();
+appendElement.appendUl();
 
-//Добавляем поведение кнопки - нужно переписать. В claude https://claude.ai/chat/4c0c08cc-530e-43f2-bf13-7932e51d3eae - есть пример как исправить.
-//Но пока что нужно самому подумать
+setH3Text("Данные о местоположении:");
+setButtonText("click");
+
+const button = getButton();
+
+//Объявить и инициализировать функцию для получения информации о погоде и о данном местоположении пользователя
+const getGeo = new GetGeoData();
 export async function buttonBehavior() {
-  console.log("we are in buttonBehavior");
-
+  //Сохранить в переменную ul для дальнейшего заполнения
+  const ulEl = getUl();
+  checkUl();
+  const inputValue = getInputValue();
   switch (true) {
-    case emptyInput():
-      console.log("we are emptyInput");
-      createUnorderedList(await getInformation.getGeo());
+    case inputValue === "":
+      const fetchResult = await getGeo.myGeo();
+      formatFetchResult(fetchResult, ulEl);
       break;
-    default:
-      const inputValue = document.querySelector("input").value;
+    case inputValue === "myWeather":
       clearInput();
-      createUnorderedList(await getInformation.getFetchInformation(inputValue));
+      const myCity = (await getGeo.myGeo()).city;
+      const weatherInMyCity = await getGeo.weatherInCity(myCity);
+      formatFetchResult(weatherInMyCity, ulEl);
+      break;
+    case !(inputValue === ""):
+      clearInput();
+      const cityInformation = await getGeo.weatherInCity(inputValue);
+      formatFetchResult(cityInformation, ulEl);
+      break;
   }
 }
+
+button.addEventListener("click", buttonBehavior);
