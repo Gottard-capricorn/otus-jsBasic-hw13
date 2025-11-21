@@ -28,25 +28,24 @@ const getGeo = new GetGeoData();
 export async function buttonBehavior() {
   //Сохранить в переменную ul для дальнейшего заполнения
   const ulEl = getUl();
-  checkUl();
   const inputValue = getInputValue();
+  let fetchResult;
   switch (true) {
     case inputValue === "":
-      const fetchResult = await getGeo.myGeo();
-      formatFetchResult(fetchResult, ulEl);
+      fetchResult = await getGeo.myGeo();
       break;
     case inputValue === "myWeather":
       clearInput();
       const myCity = (await getGeo.myGeo()).city;
-      const weatherInMyCity = await getGeo.weatherInCity(myCity);
-      formatFetchResult(weatherInMyCity, ulEl);
+      fetchResult = await getGeo.weatherInCity(myCity);
       break;
     case !(inputValue === ""):
       clearInput();
-      const cityInformation = await getGeo.weatherInCity(inputValue);
-      formatFetchResult(cityInformation, ulEl);
+      fetchResult = await getGeo.weatherInCity(inputValue);
       break;
   }
+  checkUl();
+  formatFetchResult(fetchResult, ulEl);
 }
 
 button.addEventListener("click", buttonBehavior);
